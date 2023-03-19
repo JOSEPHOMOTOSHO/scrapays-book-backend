@@ -13,7 +13,8 @@ import { Context } from 'vm';
     GraphQLModule.forRoot({
       autoSchemaFile: `schema.gql`,
       driver: ApolloDriver,
-      playground: true
+      playground: true,
+      endpoint:"/graphql"
     
     }),
     TypeOrmModule.forRoot({
