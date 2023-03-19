@@ -6,12 +6,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BookModule } from './book/book.module';
 import { ApolloDriver } from '@nestjs/apollo';
 import { AuthModule } from './auth/auth.module';
+import { Context } from 'vm';
 
 @Module({
   imports: [
     GraphQLModule.forRoot({
       autoSchemaFile: `schema.gql`,
       driver: ApolloDriver,
+      context:(ctx:Context) => ctx
     }),
     TypeOrmModule.forRoot({
       type: 'sqlite',
