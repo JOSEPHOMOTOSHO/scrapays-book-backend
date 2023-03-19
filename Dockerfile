@@ -1,15 +1,29 @@
-FROM node:14
 
-WORKDIR /app
+FROM node:16-alpine as builder
 
-COPY package.json package-lock.json* ./
+ENV NODE_ENV build
 
-RUN npm install
+USER node
+WORKDIR /home/node
 
-COPY . .
+COPY package*.json ./
+RUN npm ci
 
-RUN npm run build
+COPY --chown=node:node . .
+RUN npm run build \
+    && npm prune --production
 
-EXPOSE 3000
+# ---
 
-CMD ["npm", "start"]
+FROM node:16-alpine
+
+ENV NODE_ENV production
+
+USER node
+WORKDIR /home/node
+
+COPY --from=builder --chown=node:node /home/node/package*.json ./
+COPY --from=builder --chown=node:node /home/node/node_modules/ ./node_modules/
+COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
+
+CMD ["node", "dist/main.js"]
