@@ -13,7 +13,8 @@ import { Context } from 'vm';
     GraphQLModule.forRoot({
       autoSchemaFile: `schema.gql`,
       driver: ApolloDriver,
-      context:(ctx:Context) => ctx
+      playground: true
+    
     }),
     TypeOrmModule.forRoot({
       type: 'sqlite',
